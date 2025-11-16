@@ -1,5 +1,9 @@
 #!/bin/bash
-# Execute this script as administrator
+# Execute this script as user
+
+#Variables to set
+username="" # your name for git
+mail=""		# your mail for git
 
 echo "Update fedora and install frequently used packages"
 sudo dnf update -y                          					# update everything
@@ -7,8 +11,12 @@ sudo dnf install distrobox podman-docker podman-compose -y      # install distro
 sudo dnf install bat -y											# install bat (cool version of cat)
 sudo dnf install nextcloud-client -y							# for nextcloud syncronization
 
+
 echo "Installing flatpaks"
 xargs flatpak install -y --noninteractive flathub < flatpaks.txt
+
+echo "Installing gnome tweaks and extensions:" 
+sudo dnf install gnome-tweaks gnome-shell-extension-appindicator gnome-shell-extension-dash-to-dock -y
 
 # https://github.com/containers/buildah/issues/2959
 echo "Change BUILDAH_FORMAT=docker to build Dockerfile with podman with no issues"
@@ -20,9 +28,8 @@ gh auth login
 gh auth setup-git
 
 
-read -p "Insert username for git" username
+echo "Configuring git"
 git config --global user.name $username
-read -p "Insert username for git" mail
 git config --global user.email $mail
 
 # additional configuration for desktop 
