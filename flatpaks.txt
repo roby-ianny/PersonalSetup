@@ -2,4 +2,4 @@ com.github.tchx84.Flatseal
 it.mijorus.gearlever
 com.visualstudio.code
 com.mattjakeman.ExtensionManager
-
+com.github.flxzt.rnote
