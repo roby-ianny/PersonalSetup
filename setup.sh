@@ -2,8 +2,8 @@
 # Execute this script as user
 
 #Variables to set
-username="" # your name for git
-mail=""		# your mail for git
+username="" 		# your name for git
+mail=""				# your mail for git
 
 echo "Update fedora and install frequently used packages"
 sudo dnf update -y                          					# update everything
@@ -13,31 +13,42 @@ sudo dnf install nextcloud-client -y							# for nextcloud syncronization
 sudo dnf install fuse fuse-libs									# to let appimages work
 
 echo "Installing flatpaks"
-xargs flatpak install -y --noninteractive flathub < flatpaks.txt
+# xargs flatpak install -y --noninteractive flathub < flatpaks.txt
 
 echo "Installing gnome tweaks and extensions:" 
 sudo dnf install gnome-tweaks gnome-shell-extension-appindicator gnome-shell-extension-dash-to-dock -y
 
 # https://github.com/containers/buildah/issues/2959
 echo "Change BUILDAH_FORMAT=docker to build Dockerfile with podman with no issues"
-sudo echo 'BUILDAH_FORMAT=docker' | sudo tee -a /etc/environment # build Dockerfiles the same way as docker
+if [ $BUILDAH_FORMAT=="docker" ]; then
+	echo "Already done"
+else
+	sudo echo 'BUILDAH_FORMAT=docker' | sudo tee -a /etc/environment # build Dockerfiles the same way as docker
+fi
 
 echo "Set up Git with GitHub CLI"
 sudo dnf install gh	-y											# better github integration
 gh auth login
 gh auth setup-git
 
-
-echo "Configuring git"
-git config --global user.name $username
-git config --global user.email $mail
+read -p "Would you like to set global github username and mail? (y/n)" confirm
+if [ "$confirm" == "y" ]; then
+	echo "Configuring git"
+	git config --global user.name $username
+	git config --global user.email $mail
+fi
 
 # additional configuration for desktop 
 read -p "Apply additional config for your desktop? (y/n)" confirm
 if [ "$confirm" == "y" ]; then
 	# https://discussion.fedoraproject.org/t/severe-display-glitches-on-fedora-43-intel-arc-b580/170988
 	echo "Apply patch for broken GTK applications for Intel Arc B580"
-	echo 'GSK_RENDERER=gl' | sudo tee -a /etc/environment
+	
+	if [ $GSK_RENDERER=="gl" ]; then
+		echo "Already done"
+	else
+		echo 'GSK_RENDERER=gl' | sudo tee -a /etc/environment	
+	fi
 	
 	echo "Installing additional flatpaks for desktop"
 	xargs flatpak install -y --noninteractive flathub < flatpaks_desktop.txt
