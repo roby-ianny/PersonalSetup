@@ -11,6 +11,7 @@ sudo dnf install distrobox podman-docker podman-compose -y      # install distro
 sudo dnf install bat -y											# install bat (cool version of cat)
 sudo dnf install nextcloud-client -y							# for nextcloud syncronization
 sudo dnf install fuse fuse-libs									# to let appimages work
+sudo dnf install calibre -y										# ebook management
 
 echo "Installing flatpaks"
 # xargs flatpak install -y --noninteractive flathub < flatpaks.txt

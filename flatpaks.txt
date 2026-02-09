@@ -4,3 +4,4 @@ com.visualstudio.code
 com.mattjakeman.ExtensionManager
 com.github.flxzt.rnote
 org.localsend.localsend_app
+com.rustdesk.RustDesk
